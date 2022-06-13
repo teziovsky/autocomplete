@@ -51,10 +51,10 @@ const testCasesGenerator: Fig.Generator = {
   script:
     'for i in $(find -E . -regex ".*.robot" -type f); do cat -s $i ; done',
   postProcess: (out) => {
-    // find all the parts of the code with test cases
-    // regex: everytring after '***Test Cases***' until '***???***')
+    // find all parts of the code with test cases
+    // regex: everything after '***Test Cases***' until '***???***')
     const iter = out.matchAll(
-      /(?:\*{3}Test Cases\*{3})([\S\s]*)(?:\*{3}(\w+\s?)+\*{3})/gim
+      /(?:\*{3} ?Test Cases ?\*{3})([\S\s]*)(?:\*{3}(\w+\s?)+\*{3})*/gim
     );
 
     const seen: Set<string> = new Set();
@@ -63,7 +63,7 @@ const testCasesGenerator: Fig.Generator = {
     // go through ***Test Cases** blocks
     for (const [_, block] of iter) {
       // get every test case name
-      // regex: word/s at the start of a line divided
+      // regex: word/s at the start of a line until '#'
       const lines = block.matchAll(/^(\w+ *)+(?!.\#.*)(?!.\#.*)/gm);
       // go through all the test cases names found
       for (let [testCase] of lines) {
@@ -521,7 +521,6 @@ const completionSpec: Fig.Spec = {
       description: "Flattens matching keywords in the generated log file",
       args: {
         name: "pattern",
-
         suggestions: [
           {
             name: "for",
@@ -622,7 +621,6 @@ const completionSpec: Fig.Spec = {
         name: "class",
       },
     },
-
     {
       name: "--console",
       description: "How to report execution on the console",
@@ -723,7 +721,6 @@ const completionSpec: Fig.Spec = {
             name: "on",
             type: "option",
           },
-
           {
             name: "off",
             type: "option",
