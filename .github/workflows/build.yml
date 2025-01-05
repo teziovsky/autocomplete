@@ -35,8 +35,10 @@ jobs:
       - name: bundle files
         run: |
           mv build/ specs/
+          mv icons/ specs/
           zip -r specs.zip specs/
           mv specs/ build/
+          mv build/icons icons
         # Bump the version and create a git tag with the new version
       - name: Bump version and push tag
         id: tag_version
@@ -48,7 +50,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
         # Create a new github release with the newly created specs.zip file
       - name: Release
-        uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87
+        uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191
         with:
           files: specs.zip
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
